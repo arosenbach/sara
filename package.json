@@ -1,7 +1,7 @@
 {
   "name": "@arosenba/sara",
   "description": "SMS Appointment Reminder Application that scans a directory to find ICS files. Requires gammu SMS Daemon.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "./bin/sara.js",
   "bin": {
     "sara": "./bin/sara.js"
