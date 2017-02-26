@@ -1,0 +1,29 @@
+{
+  "name": "sara",
+  "description": "SMS Appointment Reminder Application that scans a directory to find ICS files. Requires gammu SMS Daemon.",
+  "version": "1.0.0",
+  "main": "./bin/sara.js",
+  "bin": {
+    "gulp": "./bin/sara.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http"
+  },
+  "author": "Antoine Rosenbach <npm@rbch.ovh>",
+  "license": "GPLv3",
+  "dependencies": {
+    "child_process": "1.0.2",
+    "fs": "0.0.1-security",
+    "ical": "0.5.0",
+    "path": "0.12.7",
+    "phone": "1.0.9",
+    "ps-node": "0.1.4",
+    "winston": "2.3.1",
+    "winston-loggly-bulk": "1.4.0",
+    "yargs": "6.6.0"
+  }
+}
