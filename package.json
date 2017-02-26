@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "http"
+    "url": "https://github.com/arosenbach/sara.git"
   },
   "author": "Antoine Rosenbach <npm@rbch.ovh>",
   "license": "GPLv3",
