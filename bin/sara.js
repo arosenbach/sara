@@ -23,10 +23,13 @@ const argv = require('yargs')
     .nargs('m', 1)
     .alias('r', 'days')
     .nargs('r', 1)
+    .boolean('k')
+    .alias('k', 'keep')
     .boolean('n')
     .alias('n', 'dry-run')
     .describe('c', 'Country code used to identify phone numbers (\'fr\' for France)')
     .describe('n', 'Dry-run mode (no SMS will be sent).')
+    .describe('k', 'Do not delete *.ics files.')
     .describe('m', 'The message to send. Special word \'[TIME]\' will be replaced by the actual time.')
     .describe('d', 'The directory where *.ics files are put.')
     .describe('r', 'A number that represents the day for which reminders must be sent (eg: 1 for eventsDate).')
@@ -149,7 +152,7 @@ function parseFile(file) {
             }
         });
 
-    if (!argv['dry-run']) {
+    if (!argv['dry-run'] || !argv['keep']) {
         fs.unlink(file);
     }
 }
