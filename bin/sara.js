@@ -3,7 +3,6 @@
 'use strict';
 
 const winston = require('winston');
-require('winston-loggly-bulk');
 const ps = require('ps-node');
 const path = require('path');
 const ical = require('ical');
@@ -40,13 +39,6 @@ const argv = require('yargs')
 
 // Logger initialisation
 const transports = [new (winston.transports.Console)()];
-if (process.env.LOGGLY_TOKEN) {
-    transports.push(new (winston.transports.Loggly)({
-        token: process.env.LOGGLY_TOKEN,
-        subdomain: process.env.LOGGLY_SUBDOMAIN,
-        json: true
-    }))
-}
 const logger = new (winston.Logger)({
     transports: transports
 });
@@ -152,7 +144,7 @@ function parseFile(file) {
             }
         });
 
-    if (!argv['dry-run'] || !argv['keep']) {
+    if (!argv['dry-run'] && !argv['keep']) {
         fs.unlink(file);
     }
 }
