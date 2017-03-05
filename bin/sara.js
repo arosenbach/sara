@@ -6,7 +6,6 @@ const winston = require('winston');
 const ps = require('ps-node');
 const path = require('path');
 const ical = require('ical');
-const phone = require('phone');
 const fs = require('fs');
 const exec = require('child_process').exec;
 const argv = require('yargs')
@@ -38,7 +37,7 @@ const argv = require('yargs')
     .argv;
 
 // Logger initialisation
-const transports = [new (winston.transports.Console)()];
+const transports = [new (winston.transports.Console)({'timestamp':true})];
 const logger = new (winston.Logger)({
     transports: transports
 });
@@ -51,6 +50,7 @@ switch (argv.verbose) {
 // Exit if another sara process is running.
 ps.lookup({
     command: 'node',
+    psargs: 'ux'
 }, function (err, resultList) {
     if (err) {
         throw new Error(err);
@@ -93,7 +93,9 @@ function extractPhoneNumber(str) {
         return null;
     }
     logger.debug('Extracting phone number', str);
-    const matches = phone(str, argv.country);
+    str = str.replace(/-| |\.|_/g, '')
+    const cellPhoneNumberPattern = '(0|\\+33|0033)(6|7)[0-9]{8}';
+    const matches = str.match(cellPhoneNumberPattern);
     if (matches && matches.length) {
         return matches[0];
     } else {
@@ -148,4 +150,3 @@ function parseFile(file) {
         fs.unlink(file);
     }
 }
-
