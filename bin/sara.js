@@ -28,7 +28,7 @@ const argv = require('yargs')
     .describe('c', 'Country code used to identify phone numbers (\'fr\' for France)')
     .describe('n', 'Dry-run mode (no SMS will be sent).')
     .describe('k', 'Do not delete *.ics files.')
-    .describe('m', 'The message to send. Special word \'[TIME]\' will be replaced by the actual time.')
+    .describe('m', 'The message to send. Special words \'[DATE]\' and \'[TIME]\' will be replaced by the actual date and time.')
     .describe('d', 'The directory where *.ics files are put.')
     .describe('r', 'A number that represents the day for which reminders must be sent (eg: 1 for eventsDate).')
     .demandOption(['d', 'm', 'r','c'])
@@ -104,11 +104,19 @@ function extractPhoneNumber(str) {
     }
 
 }
-
-function getMsg(hours, minutes) {
+const days = ['dimanche','lundi','mardi','mercredi','jeudi','vendredi','samedi'];
+function getMsg(appointmentDate) {
+    var splittedDate = appointmentDate.toISOString().slice(0,10).split('-');
+    const dayDate = splittedDate[2];
+    const month = splittedDate[1];
+    const dayStr = days[appointmentDate.getDay()];
+    const dateStr = `${dayStr} ${dayDate}/${month}`;
+    //const month = appointmentDate.getMonth() + 1;
+    const hours = appointmentDate.getHours();
+    var minutes = appointmentDate.getMinutes();
     minutes = (minutes) ? ('0' + minutes).slice(-2) : '00';
     const time = `${hours}:${minutes}`;
-    return argv.message.replace('[TIME]', time);
+    return argv.message.replace('[TIME]', time).replace('[DATE]',dateStr);
 }
 
 function parseFile(file) {
@@ -130,7 +138,7 @@ function parseFile(file) {
         .filter(ev => ev.cellPhoneNumber !== null)
         .forEach(
         function (ev) {
-            const cmdStr = `gammu-smsd-inject TEXT ${ev.cellPhoneNumber}  -text '${getMsg(ev.appointmentDate.getHours(), ev.appointmentDate.getMinutes())}'`;
+            const cmdStr = `gammu-smsd-inject TEXT ${ev.cellPhoneNumber}  -text '${getMsg(ev.appointmentDate)}'`;
             logger.info(ev.summary, ':', cmdStr);
             if (!argv['dry-run']) {
                 exec(cmdStr,
